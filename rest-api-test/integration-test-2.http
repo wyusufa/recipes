@@ -1,0 +1,101 @@
+# register 3 users
+# post 1 recipe to each user
+# delete recipe with incorrect author
+
+
+### REGISTER Users
+POST http://localhost:8080/api/register
+Content-Type: application/json
+
+{
+  "username" : "alvian@gmail.com",
+  "password" : "123456789",
+  "role" : "ROLE_USER"
+}
+###
+POST http://localhost:8080/api/register
+Content-Type: application/json
+
+{
+  "username" : "wanda@gmail.com",
+  "password" : "123456789",
+  "role" : "ROLE_USER"
+}
+###
+POST http://localhost:8080/api/register
+Content-Type: application/json
+
+{
+  "username" : "yusuf@gmail.com",
+  "password" : "123456789",
+  "role" : "ROLE_USER"
+}
+
+### add 1 recipe to each user
+POST http://localhost:8080/api/recipe/new
+Content-Type: application/json
+Authorization: Basic wanda@gmail.com 123456789
+
+{
+  "name": "bakso urat",
+  "category": "bakso",
+  "description": "Light, aromatic and refreshing beverage, ...",
+  "ingredients": ["boiled water", "honey", "fresh mint leaves, add sambal"],
+  "directions": ["Boil water", "Pour boiling hot water into a mug", "Add fresh mint leaves", "Mix and let the mint leaves seep for 3-5 minutes", "Add honey and mix again"]
+}
+
+###
+POST http://localhost:8080/api/recipe/new
+Content-Type: application/json
+Authorization: Basic yusuf@gmail.com 123456789
+
+{
+  "name": "bakso mercon",
+  "category": "bakso",
+  "description": "Light, aromatic and refreshing beverage, ...",
+  "ingredients": ["boiled water", "honey", "fresh mint leaves, add sambal"],
+  "directions": ["Boil water", "Pour boiling hot water into a mug", "Add fresh mint leaves", "Mix and let the mint leaves seep for 3-5 minutes", "Add honey and mix again"]
+}
+###
+POST http://localhost:8080/api/recipe/new
+Content-Type: application/json
+Authorization: Basic alvian@gmail.com 123456789
+
+{
+  "name": "bakso lava",
+  "category": "bakso",
+  "description": "Light, aromatic and refreshing beverage, ...",
+  "ingredients": ["boiled water", "honey", "fresh mint leaves, add sambal"],
+  "directions": ["Boil water", "Pour boiling hot water into a mug", "Add fresh mint leaves", "Mix and let the mint leaves seep for 3-5 minutes", "Add honey and mix again"]
+}
+
+### delete recipe according to its author
+DELETE http://localhost:8080/api/recipe/2
+Accept: application/json
+Authorization: Basic wanda@gmail.com 123456789
+
+> {%
+    client.test("forbidden", function() {
+        client.assert(response.status === 403, "Response status is not 403");
+    });
+%}
+###
+DELETE http://localhost:8080/api/recipe/3
+Accept: application/json
+Authorization: Basic yusuf@gmail.com 123456789
+
+> {%
+    client.test("forbidden", function() {
+        client.assert(response.status === 403, "Response status is not 403");
+    });
+%}
+###
+DELETE http://localhost:8080/api/recipe/1
+Accept: application/json
+Authorization: Basic alvian@gmail.com 123456789
+
+> {%
+    client.test("forbidden", function() {
+        client.assert(response.status === 403, "Response status is not 403");
+    });
+%}

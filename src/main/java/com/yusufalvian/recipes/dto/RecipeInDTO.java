@@ -4,21 +4,18 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class RecipeDtoOut {
-
+public class RecipeInDTO {
+    @NotBlank
     private String name;
-
-    private LocalDateTime date;
-
+    @NotBlank
     private String category;
-
+    @NotBlank
     private String description;
-
+    @NotEmpty
     private List<String> ingredients;
-
+    @NotEmpty
     private List<String> directions;
 }

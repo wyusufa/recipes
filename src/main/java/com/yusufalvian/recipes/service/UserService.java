@@ -1,5 +1,6 @@
 package com.yusufalvian.recipes.service;
 
+import com.yusufalvian.recipes.entity.Recipe;
 import com.yusufalvian.recipes.entity.UserEntity;
 import com.yusufalvian.recipes.dto.UserDTO;
 import org.springframework.security.core.Authentication;
@@ -7,6 +8,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 public class UserService {
@@ -34,6 +37,10 @@ public class UserService {
         userEntity.setPassword(userDTO.getPassword());
         userEntity.setRole(userDTO.getRole());
         return userEntity;
+    }
+
+    public boolean userIsAuthorOfRecipe(Recipe recipe) {
+        return Objects.equals(recipe.getUserEntity().getUsername(), getAuthUserName());
     }
 
 

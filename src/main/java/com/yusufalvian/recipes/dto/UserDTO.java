@@ -16,7 +16,7 @@ public class UserDTO {
     private String username; //using email as username
 
     @NotBlank
-    @Size(min = 8, max = 15)
+    @Size(min = 8, max = 15, message = "password is invalid. its length should be at least 8 and maximum 15")
     private String password;
 
     @NotBlank

@@ -14,14 +14,10 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.httpBasic();
         http.authorizeRequests()
-                .antMatchers("/").permitAll()
+                .antMatchers("/api/recipe/**").hasRole("USER")
                 .antMatchers("/h2-console/**").permitAll()
-                .mvcMatchers(HttpMethod.POST,"/api/register").permitAll()
-                .mvcMatchers(HttpMethod.POST,"/api/recipe/new").hasRole("USER")
-                .mvcMatchers(HttpMethod.GET,"/api/recipe/search/**").hasRole("USER")
-                .mvcMatchers(HttpMethod.GET,"/api/recipe/**").hasRole("USER")
-                .mvcMatchers(HttpMethod.PUT,"/api/recipe/**").hasRole("USER")
-                .mvcMatchers(HttpMethod.DELETE,"/api/recipe/**").hasRole("USER");
+                .antMatchers(HttpMethod.POST,"/api/register").permitAll()
+                .antMatchers("/**").permitAll();
 
         http.csrf()
                 .disable();

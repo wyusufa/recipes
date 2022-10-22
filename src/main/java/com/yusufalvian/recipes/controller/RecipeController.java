@@ -1,7 +1,8 @@
 package com.yusufalvian.recipes.controller;
 
+import com.yusufalvian.recipes.dto.RecipeOutDTO;
 import com.yusufalvian.recipes.entity.Recipe;
-import com.yusufalvian.recipes.dto.RecipeDtoIn;
+import com.yusufalvian.recipes.dto.RecipeInDTO;
 import com.yusufalvian.recipes.repository.RecipeRepository;
 import com.yusufalvian.recipes.service.RecipeService;
 import com.yusufalvian.recipes.service.UserService;
@@ -28,16 +29,30 @@ public class RecipeController {
     }
 
     @PostMapping("/new")
-    public String postRecipe(@Valid @RequestBody RecipeDtoIn recipeDtoIn) {
-        Recipe recipe = recipeService.toRecipe(recipeDtoIn);
+    public String postRecipe(@Valid @RequestBody RecipeInDTO recipeInDTO) {
+        Recipe recipe = recipeService.toRecipe(recipeInDTO);
         recipeRepository.save(recipe);
         return String.format("{\"id\":%s}",recipe.getId());
     }
 
+    @GetMapping(value="/your-recipes")
+    public ResponseEntity<?> getYourRecipes() {
+        String username = userService.getAuthUserName();
+        var recipes = recipeRepository.findRecipeByUsername(username);
+        if (recipes != null) {
+            var recipesDtoOut = recipeService.toRecipeDtoOuts(recipes);
+            return new ResponseEntity<>(recipesDtoOut,HttpStatus.OK);
+        }
+        return new ResponseEntity<>("[ ]",HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<Recipe> getRecipe(@PathVariable Long id) {
+    public ResponseEntity<RecipeOutDTO> getRecipe(@PathVariable Long id) {
         Recipe recipe = recipeRepository.findById(id).orElseGet(() -> null);
-        if (recipe != null) return new ResponseEntity<>(recipe, HttpStatus.OK);
+        if (recipe != null) {
+            RecipeOutDTO recipeOutDTO = recipeService.toRecipeDtoOut(recipe);
+            return new ResponseEntity<>(recipeOutDTO, HttpStatus.OK);
+        }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
@@ -45,7 +60,7 @@ public class RecipeController {
     public ResponseEntity<?> deleteRecipe(@PathVariable Long id) {
         Recipe recipe = recipeRepository.findById(id).orElseGet(() -> null);
         if (recipe != null) {
-            if (Objects.equals(recipe.getUserEntity().getUsername(), userService.getAuthUserName())) {
+            if (userService.userIsAuthorOfRecipe(recipe)) {
                 recipeRepository.deleteById(id);
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -55,11 +70,11 @@ public class RecipeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateRecipe(@PathVariable Long id, @Valid @RequestBody RecipeDtoIn recipeDtoIn) {
+    public ResponseEntity<?> updateRecipe(@PathVariable Long id, @Valid @RequestBody RecipeInDTO recipeInDTO) {
         Recipe recipe = recipeRepository.findById(id).orElseGet(() -> null);
         if (recipe != null) {
-            if (Objects.equals(recipe.getUserEntity().getUsername(), userService.getAuthUserName())) {
-                Recipe updateRecipe = recipeService.toPartialUpdateRecipe(recipe,recipeDtoIn);
+            if (userService.userIsAuthorOfRecipe(recipe)) {
+                Recipe updateRecipe = recipeService.toPartialUpdateRecipe(recipe, recipeInDTO);
                 recipeRepository.save(updateRecipe);
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -76,7 +91,6 @@ public class RecipeController {
             var recipesDtoOut = recipeService.toRecipeDtoOuts(recipes);
             return new ResponseEntity<>(recipesDtoOut,HttpStatus.OK);
         }
-
         return new ResponseEntity<>("[ ]",HttpStatus.OK);
     }
 

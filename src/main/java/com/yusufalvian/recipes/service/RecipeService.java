@@ -1,8 +1,8 @@
 package com.yusufalvian.recipes.service;
 
-import com.yusufalvian.recipes.dto.RecipeDtoOut;
+import com.yusufalvian.recipes.dto.RecipeOutDTO;
 import com.yusufalvian.recipes.entity.Recipe;
-import com.yusufalvian.recipes.dto.RecipeDtoIn;
+import com.yusufalvian.recipes.dto.RecipeInDTO;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,45 +18,46 @@ public class RecipeService {
         this.userService = userService;
     }
 
-    public Recipe toRecipe(RecipeDtoIn recipeDtoIn) {
+    public Recipe toRecipe(RecipeInDTO recipeInDTO) {
         Recipe inputRecipe = new Recipe();
-        inputRecipe.setName(recipeDtoIn.getName());
-        inputRecipe.setCategory(recipeDtoIn.getCategory());
+        inputRecipe.setName(recipeInDTO.getName());
+        inputRecipe.setCategory(recipeInDTO.getCategory());
         inputRecipe.setDate(LocalDateTime.now());
-        inputRecipe.setDescription(recipeDtoIn.getDescription());
-        inputRecipe.setIngredients(recipeDtoIn.getIngredients());
-        inputRecipe.setDirections(recipeDtoIn.getDirections());
+        inputRecipe.setDescription(recipeInDTO.getDescription());
+        inputRecipe.setIngredients(recipeInDTO.getIngredients());
+        inputRecipe.setDirections(recipeInDTO.getDirections());
         inputRecipe.setUserEntity(userService.getUserEntity());
         return inputRecipe;
     }
 
-    public Recipe toPartialUpdateRecipe(Recipe inputRecipe, RecipeDtoIn recipeDtoIn) {
-        inputRecipe.setName(recipeDtoIn.getName());
-        inputRecipe.setCategory(recipeDtoIn.getCategory());
+    public Recipe toPartialUpdateRecipe(Recipe inputRecipe, RecipeInDTO recipeInDTO) {
+        inputRecipe.setName(recipeInDTO.getName());
+        inputRecipe.setCategory(recipeInDTO.getCategory());
         inputRecipe.setDate(LocalDateTime.now());
-        inputRecipe.setDescription(recipeDtoIn.getDescription());
-        inputRecipe.setIngredients(recipeDtoIn.getIngredients());
-        inputRecipe.setDirections(recipeDtoIn.getDirections());
+        inputRecipe.setDescription(recipeInDTO.getDescription());
+        inputRecipe.setIngredients(recipeInDTO.getIngredients());
+        inputRecipe.setDirections(recipeInDTO.getDirections());
         return inputRecipe;
     }
 
-    public List<RecipeDtoOut> toRecipeDtoOuts(List<Recipe> recipes) {
-        var recipeDtoOuts = new ArrayList<RecipeDtoOut>();
+    public List<RecipeOutDTO> toRecipeDtoOuts(List<Recipe> recipes) {
+        var recipeDtoOuts = new ArrayList<RecipeOutDTO>();
         for (Recipe recipe : recipes) {
             recipeDtoOuts.add(toRecipeDtoOut(recipe));
         }
         return recipeDtoOuts;
     }
 
-    public RecipeDtoOut toRecipeDtoOut(Recipe recipe) {
-        RecipeDtoOut recipeDtoOut = new RecipeDtoOut();
-        recipeDtoOut.setName(recipe.getName());
-        recipeDtoOut.setCategory(recipe.getCategory());
-        recipeDtoOut.setDate(recipe.getDate());
-        recipeDtoOut.setDescription(recipe.getDescription());
-        recipeDtoOut.setIngredients(recipe.getIngredients());
-        recipeDtoOut.setDirections(recipe.getDirections());
-        return recipeDtoOut;
+    public RecipeOutDTO toRecipeDtoOut(Recipe recipe) {
+        RecipeOutDTO recipeOutDTO = new RecipeOutDTO();
+        recipeOutDTO.setName(recipe.getName());
+        recipeOutDTO.setCategory(recipe.getCategory());
+        recipeOutDTO.setDate(recipe.getDate());
+        recipeOutDTO.setDescription(recipe.getDescription());
+        recipeOutDTO.setIngredients(recipe.getIngredients());
+        recipeOutDTO.setDirections(recipe.getDirections());
+        recipeOutDTO.setAuthor(recipe.getUserEntity().getUsername());
+        return recipeOutDTO;
     }
 
 

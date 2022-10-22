@@ -33,3 +33,6 @@ dependencies {
 
 # documentation
 documentation of the APIs can be accessed in http://localhost:8080/swagger-ui.html
+
+# rest api testing
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/16178423-b7fe888e-1f41-49c9-8296-8d1c1e689017?action=collection%2Ffork&collection-url=entityId%3D16178423-b7fe888e-1f41-49c9-8296-8d1c1e689017%26entityType%3Dcollection%26workspaceId%3D21a71018-9661-4b2c-8aa3-1bdf4302da2e)
